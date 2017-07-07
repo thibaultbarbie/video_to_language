@@ -1,2 +1,3 @@
 # video_to_language
-Machine learning to detect the language spoken by a person in a video
+
+Machine learning project where a neural network take a video as input and output the language spoken. 
