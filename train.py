@@ -17,7 +17,7 @@ parser.add_argument('--gpu', '-g', default=-1, type=int,
                     help='GPU ID (negative value indicates CPU)')
 parser.add_argument('--epoch', '-e', default=25, type=int,
                     help='number of epochs to learn')
-parser.add_argument('--batchsize', '-b', type=int, default=2,
+parser.add_argument('--batchsize', '-b', type=int, default=20,
                     help='learning minibatch size')
 
 args = parser.parse_args()
@@ -30,11 +30,14 @@ print('# epoch: {}'.format(args.epoch))
 print('')
 
 # Import dataset
+print "Importing dataset"
 X,Y=import_data.import_data()
 dataset=zip(X,Y)
 train_iter = chainer.iterators.SerialIterator(dataset, args.batchsize)
 
+print "Loading model"
 model = L.Classifier(model_thibault.net(20,4))
+
 
 # Setup optimizer
 optimizer = optimizers.Adam()
@@ -45,6 +48,7 @@ trainer = training.Trainer(updater, (args.epoch, 'epoch'))
 
 trainer.extend(extensions.ProgressBar())
 trainer.extend(extensions.LogReport())
-trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/rec_loss', 'main/kl_loss']))
+trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'main/accuracy']))
 
+print "Beginning the training"
 trainer.run()
